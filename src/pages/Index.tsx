@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import QueryOptimizerForm from "@/components/QueryOptimizerForm";
 import OptimizationResults from "@/components/OptimizationResults";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Optimization } from "@/types/optimization";
 import ModelSelector from "@/components/ModelSelector";
 
@@ -45,6 +44,7 @@ Vui lòng:
       // In a real implementation, this would call the OpenAI API
       // For now, we'll simulate a response
       const simulatedResponse = {
+        id: Date.now().toString(),
         originalQuery: formData.query,
         optimizedQuery: formData.query
           .replace("SELECT *", "SELECT id, name, created_at")
@@ -69,7 +69,9 @@ Vui lòng:
           "Tăng innodb_buffer_pool_size để phù hợp với 75% RAM server",
           "Điều chỉnh query_cache_size nếu có nhiều truy vấn đọc",
           "Xem xét việc sử dụng đĩa SSD cho cơ sở dữ liệu"
-        ]
+        ],
+        createdAt: new Date().toISOString(),
+        feedback: null
       };
 
       // Simulate API delay
@@ -90,6 +92,17 @@ Vui lòng:
         variant: "destructive",
       });
     }
+  };
+
+  const handleFeedbackSubmit = (updatedOptimization: Optimization) => {
+    setOptimization(updatedOptimization);
+    
+    // In a real implementation, this would send the feedback to your backend/API
+    console.log("Feedback submitted:", updatedOptimization.feedback);
+    console.log("Optimization data with feedback:", updatedOptimization);
+    
+    // Here you would typically store this in a database for training purposes
+    // For example: sendFeedbackToAPI(updatedOptimization);
   };
 
   return (
@@ -115,7 +128,11 @@ Vui lòng:
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <QueryOptimizerForm onSubmit={handleOptimize} isLoading={isLoading} />
-            <OptimizationResults optimization={optimization} isLoading={isLoading} />
+            <OptimizationResults 
+              optimization={optimization} 
+              isLoading={isLoading}
+              onFeedbackSubmit={handleFeedbackSubmit}
+            />
           </div>
         </div>
       </main>

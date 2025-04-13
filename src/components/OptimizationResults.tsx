@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -7,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Optimization } from "@/types/optimization";
 import { Sparkles, AlertCircle, Database, Server, Download, Code, ListChecks } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import OptimizationFeedback from "./OptimizationFeedback";
 
 interface OptimizationResultsProps {
   optimization: Optimization | null;
   isLoading: boolean;
+  onFeedbackSubmit?: (optimization: Optimization) => void;
 }
 
-const OptimizationResults = ({ optimization, isLoading }: OptimizationResultsProps) => {
+const OptimizationResults = ({ optimization, isLoading, onFeedbackSubmit }: OptimizationResultsProps) => {
   if (isLoading) {
     return (
       <Card className="shadow-md bg-white dark:bg-slate-800 h-full">
@@ -67,6 +68,16 @@ const OptimizationResults = ({ optimization, isLoading }: OptimizationResultsPro
       </Card>
     );
   }
+
+  const handleFeedbackSubmit = (feedback: 'effective' | 'ineffective') => {
+    if (optimization && onFeedbackSubmit) {
+      const updatedOptimization = {
+        ...optimization,
+        feedback
+      };
+      onFeedbackSubmit(updatedOptimization);
+    }
+  };
 
   return (
     <Card className="shadow-md bg-white dark:bg-slate-800 h-full">
@@ -183,6 +194,11 @@ const OptimizationResults = ({ optimization, isLoading }: OptimizationResultsPro
             </div>
           </TabsContent>
         </Tabs>
+
+        {optimization && <OptimizationFeedback 
+          optimization={optimization} 
+          onFeedbackSubmit={handleFeedbackSubmit} 
+        />}
 
         <div className="mt-6">
           <Button 
