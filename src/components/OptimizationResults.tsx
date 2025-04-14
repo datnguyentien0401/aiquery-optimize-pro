@@ -9,7 +9,6 @@ import OptimizationResultsEmpty from "./optimization-results/OptimizationResults
 import QueryTab from "./optimization-results/QueryTab";
 import IssuesTab from "./optimization-results/IssuesTab";
 import SuggestionsTab from "./optimization-results/SuggestionsTab";
-import DownloadButton from "./optimization-results/DownloadButton";
 
 interface OptimizationResultsProps {
   optimization: Optimization | null;
@@ -78,10 +77,6 @@ const OptimizationResults = ({ optimization, isLoading, onFeedbackSubmit }: Opti
           optimization={optimization} 
           onFeedbackSubmit={handleFeedbackSubmit} 
         />}
-
-        <div className="mt-6">
-          <DownloadButton />
-        </div>
       </CardContent>
     </Card>
   );
